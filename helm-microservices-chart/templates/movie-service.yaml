@@ -15,6 +15,7 @@ spec:
       containers:
         - name: {{ .Values.movieService.name }}
           image: "{{ .Values.global.dockerHubUser }}/{{ .Values.movieService.image }}:{{ .Values.global.tag }}"
+          command: ["sh", "-c", "uvicorn main:app --reload --host 0.0.0.0"]
           ports:
             - containerPort: {{ .Values.movieService.port }}
           env:
