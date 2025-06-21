@@ -3,7 +3,7 @@ pipeline {
     DOCKER_ID = "1212455"
     MOVIE_IMAGE = "movie-service"
     CAST_IMAGE = "cast-service"
-    TAG = "v.${BUILD_ID}.0"
+    TAG = "latest"
   }
   agent any
 
