@@ -35,11 +35,11 @@ data:
       listen 8081;
 
       location /api/v1/movies {
-        proxy_pass http://movie-service:8000/api/v1/movies;
+        proxy_pass http://movie-service:8000/api/v1/movies/docs;
       }
 
       location /api/v1/casts {
-        proxy_pass http://cast-service:8000/api/v1/casts;
+        proxy_pass http://cast-service:8000/api/v1/casts/docs;
       }
     }
 ---
