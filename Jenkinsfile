@@ -41,6 +41,28 @@ pipeline {
       }
     }
 
+     stage('Undeploy Envs (Dev, QA, Staging)') {
+      environment {
+        KUBECONFIG = credentials("config")
+      }
+      steps {
+
+        script {
+          sh '''
+          rm -Rf .kube
+          mkdir .kube
+          cat $KUBECONFIG > .kube/config
+
+          # Suppression des releases Helm
+          helm uninstall app --namespace dev || echo "dev: pas de release"
+          helm uninstall app --namespace qa || echo "qa: pas de release"
+          helm uninstall app --namespace staging || echo "staging: pas de release"
+          '''
+        }
+      }
+    }
+
+
     stage('Deploy Dev') {
       environment {
         KUBECONFIG = credentials("config")
@@ -53,7 +75,6 @@ pipeline {
                 ls
                 cat $KUBECONFIG > .kube/config
                 # Undeploy if exists
-                helm uninstall app --namespace dev || true
                 cp helm-microservices-chart/values-dev.yaml values.yml
                 cat values.yml
                 helm upgrade --install app ./helm-microservices-chart --values=values.yml --namespace dev --create-namespace
@@ -61,7 +82,6 @@ pipeline {
             }
       }
     }
-
     stage('Deploy QA') {
       environment {
         KUBECONFIG = credentials("config")
@@ -73,7 +93,6 @@ pipeline {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                helm uninstall app --namespace qa || true
                 cp helm-microservices-chart/values-qa.yaml values.yml
                 cat values.yml
                 helm upgrade --install app ./helm-microservices-chart --values=values.yml --namespace qa --create-namespace
@@ -93,7 +112,6 @@ pipeline {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                helm uninstall app --namespace staging || true
                 cp helm-microservices-chart/values-staging.yaml values.yml
                 cat values.yml
                 helm upgrade --install app ./helm-microservices-chart --values=values.yml --namespace staging --create-namespace
