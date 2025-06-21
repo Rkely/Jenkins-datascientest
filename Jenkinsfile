@@ -41,26 +41,26 @@ pipeline {
       }
     }
 
-    //  stage('Undeploy Envs (Dev, QA, Staging)') {
-    //   environment {
-    //     KUBECONFIG = credentials("config")
-    //   }
-    //   steps {
+     stage('Undeploy Envs (Dev, QA, Staging)') {
+      environment {
+        KUBECONFIG = credentials("config")
+      }
+      steps {
 
-    //     script {
-    //       sh '''
-    //       rm -Rf .kube
-    //       mkdir .kube
-    //       cat $KUBECONFIG > .kube/config
+        script {
+          sh '''
+          rm -Rf .kube
+          mkdir .kube
+          cat $KUBECONFIG > .kube/config
 
-    //       # Suppression des releases Helm
-    //       helm uninstall app --namespace dev || echo "dev: pas de release"
-    //       helm uninstall app --namespace qa || echo "qa: pas de release"
-    //       helm uninstall app --namespace staging || echo "staging: pas de release"
-    //       '''
-    //     }
-    //   }
-    // }
+          # Suppression des releases Helm
+          helm uninstall app --namespace dev || echo "dev: pas de release"
+          helm uninstall app --namespace qa || echo "qa: pas de release"
+          helm uninstall app --namespace staging || echo "staging: pas de release"
+          '''
+        }
+      }
+    }
 
 
     stage('Deploy Dev') {
@@ -121,7 +121,9 @@ pipeline {
     }
 
     stage('Deploy Production') {
-     
+      when { 
+        branch 'master' 
+      }
       environment {
         KUBECONFIG = credentials("config")
       }
