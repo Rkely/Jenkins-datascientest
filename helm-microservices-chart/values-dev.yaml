@@ -22,3 +22,4 @@ castService:
 
 nginx:
   port: 8081
+  nodePort: 30004

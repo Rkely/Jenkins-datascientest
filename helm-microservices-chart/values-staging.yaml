@@ -1,0 +1,25 @@
+global:
+  dockerHubUser: "1212455"
+  tag: "latest"
+
+movieService:
+  name: movie-service
+  image: "movie-service"
+  port: 8000
+  db:
+    user: movie_db_username
+    password: movie_db_password
+    name: movie_db_dev
+
+castService:
+  name: cast-service
+  image: "cast-service"
+  port: 8000
+  db:
+    user: cast_db_username
+    password: cast_db_password
+    name: cast_db_dev
+
+nginx:
+  port: 8081
+  nodePort: 30005

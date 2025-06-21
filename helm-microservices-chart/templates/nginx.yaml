@@ -52,6 +52,6 @@ spec:
     app: nginx
   ports:
     - port: 8081
-      targetPort: {{ .Values.nginx.port }}
-      nodePort: 30004
+      targetPort: {{ .Values.nginx.port }} 
+      nodePort: {{ .Values.nginx.nodePort }} 
   type: NodePort

@@ -52,7 +52,7 @@ pipeline {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                cp helm-microservices-chart/values.yaml values.yml
+                cp helm-microservices-chart/values-dev.yaml values.yml
                 cat values.yml
                 helm upgrade --install app ./helm-microservices-chart --values=values.yml --namespace dev --create-namespace
                 '''
@@ -71,7 +71,7 @@ pipeline {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                cp helm-microservices-chart/values.yaml values.yml
+                cp helm-microservices-chart/values-qa.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install app  helm-microservices-chart --values=values.yml --namespace qa --create-namespace
@@ -91,7 +91,7 @@ pipeline {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                cp helm-microservices-chart/values.yaml values.yml
+                cp helm-microservices-chart/values-staging.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install app  helm-microservices-chart --values=values.yml --namespace staging --create-namespace
@@ -115,7 +115,7 @@ pipeline {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                cp helm-microservices-chart/values.yaml values.yml
+                cp helm-microservices-chart/values-prod.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install app  helm-microservices-chart --values=values.yml --namespace prod --create-namespace
