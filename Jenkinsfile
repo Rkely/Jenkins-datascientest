@@ -121,9 +121,7 @@ pipeline {
     }
 
     stage('Deploy Production') {
-      when { 
-        branch 'master' 
-      }
+    
       environment {
         KUBECONFIG = credentials("config")
       }
