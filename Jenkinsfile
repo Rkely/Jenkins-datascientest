@@ -54,7 +54,7 @@ pipeline {
                 cat $KUBECONFIG > .kube/config
                 cp helm-microservices-chart/values.yaml values.yml
                 cat values.yml
-                helm upgrade --install app  helm-microservices-chart --values=values.yml --namespace dev --create-namespace
+                helm upgrade --install app ./helm-microservices-chart --values=values.yml --namespace dev --create-namespace
                 '''
             }
       }
