@@ -120,10 +120,10 @@ pipeline {
       }
     }
 
-    stage('Deploy Production') { //test
-      // when { 
-      //   branch 'master' 
-      // }
+    stage('Deploy Production') {
+      when { 
+        branch 'master' 
+      }
       environment {
         KUBECONFIG = credentials("config")
       }
