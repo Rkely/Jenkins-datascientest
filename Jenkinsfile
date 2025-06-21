@@ -120,6 +120,14 @@ pipeline {
       }
     }
 
+      stage('Debug Branch') {
+    steps {
+      script {
+        echo "Branche Git détectée : ${env.BRANCH_NAME}"
+      }
+    }
+  }
+
     stage('Deploy Production') {
       when {
         branch 'master' 
