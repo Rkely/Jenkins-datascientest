@@ -15,7 +15,6 @@ spec:
       containers:
         - name: {{ .Values.castService.name }}
           image: "{{ .Values.global.dockerHubUser }}/{{ .Values.castService.image }}:{{ .Values.global.tag }}"
-          command: ["sh", "-c", "uvicorn main:app --reload --host 0.0.0.0"]
           ports:
             - containerPort: {{ .Values.castService.port }}
           env:
