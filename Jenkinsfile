@@ -41,24 +41,24 @@ pipeline {
       }
     }
 
-    // stage('Deploy Dev') {
-    //   environment {
-    //     KUBECONFIG = credentials("config")
-    //   }
-    //  steps {                 // sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-    //      script {
-    //             sh '''
-    //             rm -Rf .kube
-    //             mkdir .kube
-    //             ls
-    //             cat $KUBECONFIG > .kube/config
-    //             cp helm-microservices-chart/values-dev.yaml values.yml
-    //             cat values.yml
-    //             helm upgrade --install app ./helm-microservices-chart --values=values.yml --namespace dev --create-namespace
-    //             '''
-    //         }
-    //   }
-    // }
+    stage('Deploy Dev') {
+      environment {
+        KUBECONFIG = credentials("config")
+      }
+     steps {                 // sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+         script {
+                sh '''
+                rm -Rf .kube
+                mkdir .kube
+                ls
+                cat $KUBECONFIG > .kube/config
+                cp helm-microservices-chart/values-dev.yaml values.yml
+                cat values.yml
+                helm upgrade --install app ./helm-microservices-chart --values=values.yml --namespace dev --create-namespace
+                '''
+            }
+      }
+    }
 
     stage('Deploy QA') {
       environment {
