@@ -120,20 +120,18 @@ pipeline {
       }
     }
 
-    stage('Debug Branch') {
-  steps {
-    script {
-      def branch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-      echo "Branche Git détectée (via git) : ${branch}"
+      stage('Debug Branch') {
+    steps {
+      script {
+        echo "Branche Git détectée : ${env.GIT_BRANCH}"
+      }
     }
   }
-}
+
     stage('Deploy Production') {
-     when {
-  expression {
-    sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim() == 'master'
-  }
-}
+      when {
+       env.GIT_BRANCH == 'master'
+      }
       environment {
         KUBECONFIG = credentials("config")
       }
