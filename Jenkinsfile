@@ -45,7 +45,7 @@ pipeline {
       environment {
         KUBECONFIG = credentials("config")
       }
-     steps {
+     steps {                 // sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
          script {
                 sh '''
                 rm -Rf .kube
@@ -54,7 +54,6 @@ pipeline {
                 cat $KUBECONFIG > .kube/config
                 cp helm-microservices-chart/values.yaml values.yml
                 cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install app  helm-microservices-chart --values=values.yml --namespace dev --create-namespace
                 '''
             }
