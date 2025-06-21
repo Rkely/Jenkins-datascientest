@@ -9,6 +9,11 @@ pipeline {
 
   stages {
     stage('Build & Push Movie Service') {
+         environment
+            {
+                DOCKER_PASS = credentials("DOCKER_HUB_PASS") // we retrieve  docker password from secret text called docker_hub_pass saved on jenkins
+            }
+
       steps {
         script {
           sh '''
@@ -21,6 +26,10 @@ pipeline {
     }
 
     stage('Build & Push Cast Service') {
+         environment
+            {
+                DOCKER_PASS = credentials("DOCKER_HUB_PASS") // we retrieve  docker password from secret text called docker_hub_pass saved on jenkins
+            }
       steps {
         script {
           sh '''
