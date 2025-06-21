@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.castService.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.castService.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.castService.name }}
+    spec:
+      containers:
+        - name: {{ .Values.castService.name }}
+          image: "{{ .Values.global.dockerHubUser }}/{{ .Values.castService.image }}:{{ .Values.global.tag }}"
+          ports:
+            - containerPort: {{ .Values.castService.port }}
+          env:
+            - name: DATABASE_URI
+              value: "postgresql://{{ .Values.castService.db.user }}:{{ .Values.castService.db.password }}@cast-db/{{ .Values.castService.db.name }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.castService.name }}
+spec:
+  selector:
+    app: {{ .Values.castService.name }}
+  ports:
+    - port: 8000
+      targetPort: {{ .Values.castService.port }}

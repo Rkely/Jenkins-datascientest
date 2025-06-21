@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.movieService.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.movieService.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.movieService.name }}
+    spec:
+      containers:
+        - name: {{ .Values.movieService.name }}
+          image: "{{ .Values.global.dockerHubUser }}/{{ .Values.movieService.image }}:{{ .Values.global.tag }}"
+          ports:
+            - containerPort: {{ .Values.movieService.port }}
+          env:
+            - name: DATABASE_URI
+              value: "postgresql://{{ .Values.movieService.db.user }}:{{ .Values.movieService.db.password }}@movie-db/{{ .Values.movieService.db.name }}"
+            - name: CAST_SERVICE_HOST_URL
+              value: "http://cast-service:8000/api/v1/casts/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.movieService.name }}
+spec:
+  selector:
+    app: {{ .Values.movieService.name }}
+  ports:
+    - port: 8000
+      targetPort: {{ .Values.movieService.port }}
