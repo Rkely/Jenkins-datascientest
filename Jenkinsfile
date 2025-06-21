@@ -120,14 +120,14 @@ pipeline {
       }
     }
 
-      stage('Debug Branch') {
-    steps {
-      script {
-        echo "Branche Git détectée : ${env.BRANCH_NAME}"
-      }
+    stage('Debug Branch') {
+  steps {
+    script {
+      def branch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+      echo "Branche Git détectée (via git) : ${branch}"
     }
   }
-
+}
     stage('Deploy Production') {
      when {
   expression {
