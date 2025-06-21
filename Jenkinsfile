@@ -120,17 +120,9 @@ pipeline {
       }
     }
 
-      stage('Debug Branch') {
-    steps {
-      script {
-        echo "Branche Git détectée : ${env.GIT_BRANCH}"
-      }
-    }
-  }
-
     stage('Deploy Production') {
-      when {
-       env.GIT_BRANCH == 'master'
+      when { 
+        branch 'master' 
       }
       environment {
         KUBECONFIG = credentials("config")
