@@ -43,17 +43,26 @@ pipeline {
 
     stage('Deploy Dev') {
       environment {
-        KUBECONFIG = credentials("kubeconfig")
+        KUBECONFIG = credentials("config")
       }
-      steps {
+     steps {
+         script {
+                sh '''
+                rm -Rf .kube
+                mkdir .kube
+                ls
+                cat $KUBECONFIG > .kube/config
+                cp helm-microservices-chart/values.yaml values.yml
+                cat values.yml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                helm upgrade --install app  helm-microservices-chart --values=values.yml --namespace dev
+                '''
+                }
         script {
           sh '''
-          mkdir -p ~/.kube
           cp $KUBECONFIG ~/.kube/config
-
-          cp helm-microservices-chart/values.yaml values.yaml
           sed -i "s/tag: .*/tag: ${TAG}/" values.yaml
-          helm upgrade --install microservices-app helm-microservices-chart --values values.yaml --namespace dev --create-namespace
+          helm upgrade --install microservices-app helm-microservices-chart --values values.yaml --namespace staging --create-namespace
           '''
         }
       }
@@ -61,7 +70,7 @@ pipeline {
 
     stage('Deploy QA') {
       environment {
-        KUBECONFIG = credentials("kubeconfig")
+        KUBECONFIG = credentials("config")
       }
       steps {
         script {
@@ -76,7 +85,7 @@ pipeline {
 
     stage('Deploy Staging') {
       environment {
-        KUBECONFIG = credentials("kubeconfig")
+        KUBECONFIG = credentials("config")
       }
       steps {
         script {
@@ -91,7 +100,7 @@ pipeline {
 
     stage('Deploy Production') {
       environment {
-        KUBECONFIG = credentials("kubeconfig")
+        KUBECONFIG = credentials("config")
       }
       steps {
         timeout(time: 15, unit: 'MINUTES') {
