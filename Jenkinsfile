@@ -121,6 +121,9 @@ pipeline {
     }
 
     stage('Deploy Production') {
+      when {
+        branch 'master' 
+      }
       environment {
         KUBECONFIG = credentials("config")
       }
@@ -130,16 +133,18 @@ pipeline {
         }
 
         script {
-           sh '''
-                rm -Rf .kube
-                mkdir .kube
-                ls
-                cat $KUBECONFIG > .kube/config
-                helm uninstall app --namespace prod || true
-                cp helm-microservices-chart/values-prod.yaml values.yml
-                cat values.yml
-                helm upgrade --install app ./helm-microservices-chart --values=values.yml --namespace prod --create-namespace
-                '''
+          sh '''
+            rm -Rf .kube
+            mkdir .kube
+            cat $KUBECONFIG > .kube/config
+
+            helm uninstall app --namespace prod || true
+
+            cp helm-microservices-chart/values-prod.yaml values.yml
+            cat values.yml
+
+            helm upgrade --install app ./helm-microservices-chart --values=values.yml --namespace prod --create-namespace
+          '''
         }
       }
     }
