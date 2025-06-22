@@ -83,6 +83,11 @@ pipeline {
       }
     }
     stage('Deploy QA') {
+
+       when {
+        branch 'qa'
+      }
+      
       environment {
         KUBECONFIG = credentials("config")
       }
