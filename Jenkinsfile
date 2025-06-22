@@ -121,9 +121,11 @@ pipeline {
     }
 
     stage('Deploy Production') {
-      when { 
-        branch 'master' 
-      }
+      when {
+          expression {
+            sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim() == 'master'
+          }
+        }
       environment {
         KUBECONFIG = credentials("config")
       }
